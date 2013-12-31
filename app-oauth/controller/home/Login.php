@@ -40,6 +40,7 @@ class Home_LoginController extends Controller{
                     dcookie::dsetcookie("loginoauth",$username."|".$uid,86400,true);
                     dcookie::dsetcookie("seckey",md5(serialize($username.$uid,$saltkey)),86400,true);
                     $loginrefer=dcookie::dgetcookie("loginreferer");
+                    dcookie::dsetcookie("loginreferer",'',-86400);
                     if($loginrefer){
                         $response->redirect($loginrefer);
                     }else{

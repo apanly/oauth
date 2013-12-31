@@ -4,6 +4,7 @@ require_class("dcookie");
 require_class("uri");
 class Home_DefaultController extends Controller{
     public function handle_request(){
+        $request=Dispatcher::getInstance()->get_request();
         $cookierefer=dcookie::dgetcookie("loginreferer");
         $cookiloginoauth=dcookie::dgetcookie("loginoauth");
         if($cookiloginoauth){
@@ -15,6 +16,7 @@ class Home_DefaultController extends Controller{
             $tmpseckey=md5(serialize($username.$uid,$saltkey));
             $response=Dispatcher::getInstance()->get_response();
             if($seckey==$tmpseckey){
+                dcookie::dsetcookie("loginreferer",'',-86400);
                 if($cookierefer){
                     $response->redirect($cookierefer);
                 }else{
@@ -25,11 +27,22 @@ class Home_DefaultController extends Controller{
                 dcookie::dsetcookie("seckey",'',-86400,true);
             }
         }
-        if(!$cookierefer){
-            $referer=$_SERVER['HTTP_REFERER'];
+        $params=$request->get_parameters();
+        if($params['from']){
+            $oauthfrom=$params['from'];
+            switch($oauthfrom){
+                case "book":
+                    $referer=uri::bookUri();
+                    break;
+                case "english":
+                    $referer=uri::englishComUri();
+                    break;
+            }
             if($referer){
                 dcookie::dsetcookie("loginreferer",$referer);
             }
+        }else{
+            dcookie::dsetcookie("loginreferer",'',-86400);
         }
         $request=Dispatcher::getInstance()->get_request();
         $params=$request->get_parameters();
