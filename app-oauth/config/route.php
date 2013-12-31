@@ -18,6 +18,9 @@ $config['mappings']['Home_Reg'] = array(
 $config['mappings']['Home_DoReg'] = array(
     '^/doreg$'
 );
+$config['mappings']['Home_Forgot']=array(
+   '^/forgot$'
+);
 
 
 
