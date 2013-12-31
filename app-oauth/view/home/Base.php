@@ -31,13 +31,13 @@ class Home_BaseView extends DecoratorView{
     public function get_head_sections()
     {
         return array(
-            '<meta name="description" content="YYabc oauth系统,统一登录" />',
-            '<meta name="keywords" content="YYabc,oauth,统一登录,登录" />'
+            '<meta name="description" content="YYabc通行证,英语abc,在线英语学习社区,让英语学习变得高效和有趣,图书分享,微信分享" />',
+            '<meta name="keywords" content="YYabc通行证,图书分享,微信分享,智能家居" />'
         );
     }
 
     public function get_title()
     {
-        return "YYabc oauth";
+        return "YYabc通行证-英语社区,图书分享,微信分享,智能家居";
     }
 } 
