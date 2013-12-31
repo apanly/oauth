@@ -12,6 +12,9 @@ $config['mappings']['Home_Default'] = array(
 $config['mappings']['Home_Login'] = array(
     '^/login$'
 );
+$config['mappings']['Home_LogOut'] = array(
+    '^/logout$'
+);
 $config['mappings']['Home_Reg'] = array(
     '^/reg$'
 );
