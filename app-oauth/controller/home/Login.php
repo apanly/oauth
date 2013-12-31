@@ -1,0 +1,56 @@
+<?php
+require_class("Controller");
+require_class("dcookie");
+require_class("uri");
+require_class("Bll_User");
+class Home_LoginController extends Controller{
+    public function handle_request(){
+        $reguri="/?errormsg=";
+        $requestMethod=$_SERVER['REQUEST_METHOD'];
+        if($requestMethod=="POST"){
+            $request=Dispatcher::getInstance()->get_request();
+            $response=Dispatcher::getInstance()->get_response();
+            $params=$request->get_parameters();
+            $username=$params['username'];
+            $userpwd=$params['userpwd'];
+            if(!filter_var($username,FILTER_VALIDATE_EMAIL)){
+                $errormsg="用户名格式不对,请填写邮箱格式!!";
+                $reguri.=$errormsg;
+                $response->redirect($reguri);exit();
+            }
+            if(strlen($userpwd)<6){
+                $errormsg="密码至少6位!!";
+                $reguri.=$errormsg;
+                $response->redirect($reguri);exit();
+            }
+            $blluser=new Bll_User();
+            $userinfo=$blluser->findByEmail($username);
+            if(!$userinfo){
+                $errormsg="此用户不存在!!";
+                $reguri.=$errormsg;
+                $response->redirect($reguri);exit();
+            }else{
+                $userinfopwd=$userinfo['PASSWORD'];
+                $userpwd=md5(serialize($userpwd.$userinfo['SALTKEY']));
+                if($userinfopwd==$userpwd){
+                    $uid=$userinfo['UID'];
+                    $saltkey=dcookie::dgetcookie("saltkey");
+                    $saltprekey=Dispatcher::getInstance()->get_config("saltprekey","oauth");
+                    $saltkey=$saltprekey.$saltkey;
+                    dcookie::dsetcookie("loginoauth",$username."|".$uid,86400,true);
+                    dcookie::dsetcookie("seckey",md5(serialize($username.$uid,$saltkey)),86400,true);
+                    $loginrefer=dcookie::dgetcookie("loginreferer");
+                    if($loginrefer){
+                        $response->redirect($loginrefer);
+                    }else{
+                        $response->redirect(uri::englishComUri());
+                    }
+                }else{
+                    $errormsg="用户名或者密码不正确!!";
+                    $reguri.=$errormsg;
+                    $response->redirect($reguri);exit();
+                }
+            }
+        }
+    }
+} 
