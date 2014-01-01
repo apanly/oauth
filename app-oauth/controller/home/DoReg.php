@@ -37,7 +37,7 @@ class Home_DoRegController extends Controller{
             $insertid=$blluser->addUser($username,$userpwd,$saltkey);
             if($insertid){
                 dcookie::dsetcookie("loginoauth",$username."|".$insertid,86400,true);
-                dcookie::dsetcookie("seckey",md5(serialize($username.$insertid,$saltkey)),86400,true);
+                dcookie::dsetcookie("seckey",md5(serialize($username.$insertid.$saltkey)),86400,true);
                 $loginrefer=dcookie::dgetcookie("loginreferer");
                 dcookie::dsetcookie("loginreferer",'',-86400);
                 if($loginrefer){

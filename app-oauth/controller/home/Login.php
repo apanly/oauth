@@ -38,7 +38,7 @@ class Home_LoginController extends Controller{
                     $saltprekey=Dispatcher::getInstance()->get_config("saltprekey","oauth");
                     $saltkey=$saltprekey.$saltkey;
                     dcookie::dsetcookie("loginoauth",$username."|".$uid,86400,true);
-                    dcookie::dsetcookie("seckey",md5(serialize($username.$uid,$saltkey)),86400,true);
+                    dcookie::dsetcookie("seckey",md5(serialize($username.$uid.$saltkey)),86400,true);
                     $loginrefer=dcookie::dgetcookie("loginreferer");
                     dcookie::dsetcookie("loginreferer",'',-86400);
                     if($loginrefer){

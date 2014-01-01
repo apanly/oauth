@@ -12,7 +12,7 @@ class Home_ForgotController extends Controller{
             $saltprekey=Dispatcher::getInstance()->get_config("saltprekey","oauth");
             $saltkey=$saltprekey.$saltkey;
             list($username,$uid)=explode("|",$cookiloginoauth);
-            $tmpseckey=md5(serialize($username.$uid,$saltkey));
+            $tmpseckey=md5(serialize($username.$uid.$saltkey));
             $response=Dispatcher::getInstance()->get_response();
             if($seckey==$tmpseckey){
                 dcookie::dsetcookie("loginreferer",'',-86400);
