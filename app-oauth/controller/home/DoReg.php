@@ -3,6 +3,7 @@ require_class("Controller");
 require_class("dcookie");
 require_class("uri");
 require_class("Bll_User");
+require_class("authImage");
 class Home_DoRegController extends Controller{
     public function handle_request(){
         $reguri="/reg?errormsg=";
@@ -13,6 +14,8 @@ class Home_DoRegController extends Controller{
             $params=$request->get_parameters();
             $username=$params['username'];
             $userpwd=$params['userpwd'];
+            $usernick=$params['usernick'];
+            $userauthimage=$params['authimage'];
             $saltkey=dcookie::dgetcookie("saltkey");
             $saltprekey=Dispatcher::getInstance()->get_config("saltprekey","oauth");
             $saltkey=$saltprekey.$saltkey;
@@ -26,6 +29,18 @@ class Home_DoRegController extends Controller{
                 $reguri.=$errormsg;
                 $response->redirect($reguri);exit();
             }
+            if(strlen($usernick)<=0){
+                $errormsg="名号很重要,想个响亮的名号吧!!";
+                $reguri.=$errormsg;
+                $response->redirect($reguri);exit();
+            }
+            $authimage=new authImage();
+            $decodeauthimage=$authimage->checkAuthImage();
+            if($decodeauthimage!=strtoupper($userauthimage)){
+                $errormsg="请输入正确的验证码!!";
+                $reguri.=$errormsg;
+                $response->redirect($reguri);exit();
+            }
             $blluser=new Bll_User();
             $userinfo=$blluser->findByEmail($username);
             if($userinfo){
@@ -34,10 +49,10 @@ class Home_DoRegController extends Controller{
                 $response->redirect($reguri);exit();
             }
             $userpwd=md5(serialize($userpwd.$saltkey));
-            $insertid=$blluser->addUser($username,$userpwd,$saltkey);
+            $insertid=$blluser->addUser($username,$userpwd,$usernick,$saltkey);
             if($insertid){
-                dcookie::dsetcookie("loginoauth",$username."|".$insertid,86400,true);
-                dcookie::dsetcookie("seckey",md5(serialize($username.$insertid.$saltkey)),86400,true);
+                dcookie::dsetcookie("loginoauth",$usernick."|".$insertid,86400,true);
+                dcookie::dsetcookie("seckey",md5(serialize($usernick.$insertid.$saltkey)),86400,true);
                 $loginrefer=dcookie::dgetcookie("loginreferer");
                 dcookie::dsetcookie("loginreferer",'',-86400);
                 if($loginrefer){

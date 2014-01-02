@@ -24,6 +24,9 @@ $config['mappings']['Home_DoReg'] = array(
 $config['mappings']['Home_Forgot']=array(
    '^/forgot$'
 );
+$config['mappings']['Auth_Image']=array(
+  '^/auth/image'
+);
 
 
 

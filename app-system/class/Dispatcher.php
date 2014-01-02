@@ -69,7 +69,7 @@ class Dispatcher
         $saltkey=dcookie::dgetcookie("saltkey");
         if(empty($saltkey)) {
             $tmprand=util::random(8);
-            dcookie::dsetcookie('saltkey',$tmprand, 86400 * 30);
+            dcookie::dsetcookie('saltkey',$tmprand, 86400);//在一天内有效
         }
         unset($saltkey);
     }

@@ -7,7 +7,12 @@
         </div>
         <input type="text" class="input-block-level" placeholder="请输入邮箱地址" name="username" id="username">
         <input type="password" class="input-block-level" placeholder="请输入密码,密码至少6位" name="userpwd" id="userpwd">
-        <span>
+        <input type="text" class="input-block-level" placeholder="第一印象很重要，起个响亮的名号吧" name="usernick" id="usernick">
+        <input type="text" class="input-block-level" placeholder="请输入下方的验证码 " name="authimage" id="authimage">
+        <span class="input-block-level">
+           <img  src="/auth/image" class="captcha-img"><a id="captcha" class="btn btn-link" href="javascript:void(0);">换一个</a>
+        </span>
+        <span class="input-block-level">
             <a class="btn btn-link" href="/">登录账号?</a>
             <span style="float: right;">
                 <button class="btn btn-info" type="submit">注册</button>

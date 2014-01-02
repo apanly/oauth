@@ -92,10 +92,9 @@ class util
 
     public static function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0)
     {
-        global $config;
-        $authkey = $config['secury']['authkey'];
+        $authkey = Dispatcher::getInstance()->get_config("authkey","oauth");
         $ckey_length = 4;
-        $key = md5($key != '' ? $key : $authkey);
+        $key = md5($key != '' ? $authkey.$key : $authkey);
         $keya = md5(substr($key, 0, 16));
         $keyb = md5(substr($key, 16, 16));
         $keyc = $ckey_length ? ($operation == 'DECODE' ? substr($string, 0, $ckey_length) : substr(md5(microtime()), -$ckey_length)) : '';
