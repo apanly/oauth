@@ -2,3 +2,4 @@
 ==================
 * 登录
 * 注册
+* 自动化部署可以参考 https://github.com/apanly/ansible-yyabc
