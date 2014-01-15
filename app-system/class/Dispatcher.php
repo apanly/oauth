@@ -353,7 +353,7 @@ class Dispatcher
     public function get_script_blocks() {
         if (!$this->script_blocks_processed) {
             $values = $this->script_blocks;
-            usort($values, "APF::resource_order_comparator");
+            usort($values, "Dispatcher::resource_order_comparator");
             $this->script_blocks = array();
             foreach ($values as $value) {
                 $this->script_blocks[] = $value[0];
@@ -363,6 +363,18 @@ class Dispatcher
         return $this->script_blocks;
     }
 
+    private function __construct() {
+        $this->register_shutdown_function("shutdownRecordLog");
+        register_shutdown_function(array($this, "shutdown"));
+    }
+    public function shutdown() {
+        if (is_array($this->shutdown_functions)) {
+            $functions = array_reverse($this->shutdown_functions);
+            foreach ($functions as $function) {
+                call_user_func($function);
+            }
+        }
+    }
     public function register_shutdown_function($function) {
         $this->shutdown_functions[] = $function;
     }
